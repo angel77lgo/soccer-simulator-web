@@ -18,7 +18,10 @@ COPY . .
 # Next.js telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Build-time env vars (must be set via docker build --build-arg or compose args:)
+# Build in production mode so Next.js loads .env.production
+ENV NODE_ENV=production
+
+# Allow overriding NEXT_PUBLIC_API_URL via build-arg (takes precedence over .env.production)
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 

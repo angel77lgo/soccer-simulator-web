@@ -1,12 +1,7 @@
 import axios from 'axios';
 
-const defaultBaseURL =
-  typeof window !== 'undefined'
-    ? `${window.location.origin}/api/v1`
-    : 'http://localhost:3005/api/v1';
-
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || defaultBaseURL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005/api/v1',
 });
 
 export const getTeams = async () => {
