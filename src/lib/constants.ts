@@ -31,7 +31,7 @@ export const statusMeta: Record<string, { label: string }> = {
   finished:    { label: "Finished" },
 };
 
-export const TOTAL_STEPS = 6;
+export const TOTAL_STEPS = 7;
 export const STORAGE_KEY_PREFIX = "wizard_tournament_";
 export const SLOT_DROP_ID_PREFIX = "slot-";
 export const POT_DROP_ID_PREFIX = "pot-";

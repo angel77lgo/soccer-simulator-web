@@ -7,8 +7,9 @@ import { WizardStep1General } from "@/components/wizard/WizardStep1General";
 import { WizardStep2Hosts } from "@/components/wizard/WizardStep2Hosts";
 import { WizardStep3Participants } from "@/components/wizard/WizardStep3Participants";
 import { WizardStep4Repechaje } from "@/components/wizard/WizardStep4Repechaje";
-import { WizardStep5Draw } from "@/components/wizard/WizardStep5Draw";
-import { WizardStep6Confirm } from "@/components/wizard/WizardStep6Confirm";
+import { WizardStep5Bombos } from "@/components/wizard/WizardStep5Bombos";
+import { WizardStep5Draw as WizardStep6Draw } from "@/components/wizard/WizardStep5Draw";
+import { WizardStep6Confirm as WizardStep7Confirm } from "@/components/wizard/WizardStep6Confirm";
 import { Button } from "@/components/ui/button";
 
 export default function CreateTournamentPage() {
@@ -24,6 +25,7 @@ export default function CreateTournamentPage() {
     "Anfitriones",
     "Participantes",
     "Repechaje",
+    "Bombos",
     "Sorteo",
     "Confirmación",
   ];
@@ -49,16 +51,18 @@ export default function CreateTournamentPage() {
             {state.step === 2 && "2. Países Anfitriones"}
             {state.step === 3 && "3. Plazas y Participantes"}
             {state.step === 4 && "4. Repechaje (Plazas Extra)"}
-            {state.step === 5 && "5. Sorteo y Bombos"}
-            {state.step === 6 && "6. Confirmar y Sortear"}
+            {state.step === 5 && "5. Edición de Bombos"}
+            {state.step === 6 && "6. Sorteo de Grupos"}
+            {state.step === 7 && "7. Confirmar y Sortear"}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {state.step === 1 && "Nombre y tipo de torneo."}
             {state.step === 2 && "Los anfitriones clasifican automáticamente y sus cupos se redistribuyen como repechaje libre."}
             {state.step === 3 && "Selecciona las selecciones base de cada confederación respetando los cupos."}
             {state.step === 4 && "Selecciona cualquier equipo libre (excepto UEFA) para las plazas liberadas por los anfitriones."}
-            {state.step === 5 && "Define el tipo de sorteo y revisa los bombos (cabezas de serie)."}
-            {state.step === 6 && "Revisa todo antes de generar el torneo."}
+            {state.step === 5 && "Revisa y ajusta manualmente los equipos en cada bombo (cabezas de serie)."}
+            {state.step === 6 && "Define el tipo de sorteo (automático o manual) y asigna equipos a grupos."}
+            {state.step === 7 && "Revisa todo antes de generar el torneo."}
           </p>
         </div>
 
@@ -129,7 +133,20 @@ export default function CreateTournamentPage() {
           )}
 
           {state.step === 5 && (
-            <WizardStep5Draw
+            <WizardStep5Bombos
+              pots={state.pots}
+              defaultPotsSizes={state.defaultPotsSizes}
+              activeDragTeamId={state.activeDragTeamId}
+              activeDragTeam={state.activeDragTeam}
+              handleDragStart={state.handleDragStart}
+              handleDragCancel={state.handleDragCancel}
+              handleDragEnd={state.handleDragEnd}
+              sensors={sensors}
+            />
+          )}
+
+          {state.step === 6 && (
+            <WizardStep6Draw
               drawMode={state.drawMode}
               setDrawMode={state.setDrawMode}
               assignedTeamIds={state.assignedTeamIds}
@@ -154,8 +171,8 @@ export default function CreateTournamentPage() {
             />
           )}
 
-          {state.step === 6 && (
-            <WizardStep6Confirm
+          {state.step === 7 && (
+            <WizardStep7Confirm
               name={state.name}
               type={state.type}
               subType={state.subType}
@@ -175,7 +192,7 @@ export default function CreateTournamentPage() {
               Atrás
             </Button>
 
-            {state.step < 6 ? (
+            {state.step < 7 ? (
               <Button
                 onClick={state.handleNext}
                 disabled={
@@ -183,7 +200,8 @@ export default function CreateTournamentPage() {
                   (state.step === 2 && !state.isStep2Valid) ||
                   (state.step === 3 && !state.isStep3Valid) ||
                   (state.step === 4 && !state.isStep4Valid) ||
-                  (state.step === 5 && !state.isStep5Valid)
+                  (state.step === 5 && !state.isStep5BombosValid) ||
+                  (state.step === 6 && !state.isStep6DrawValid)
                 }
               >
                 Siguiente →

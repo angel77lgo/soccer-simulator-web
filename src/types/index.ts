@@ -111,6 +111,7 @@ export interface WizardState {
   repechajeTeamIds: string[];
   drawMode: "auto" | "manual";
   manualGroups: Record<number, string[]>;
+  potsOverride?: Record<string, number>;
 }
 
 export type TeamLocation =

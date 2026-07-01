@@ -52,6 +52,7 @@ export function useWizardState() {
   const [shakingSlotId, setShakingSlotId] = useState<string | null>(null);
   const [shakeCounter, setShakeCounter] = useState(0);
   const [dropError, setDropError] = useState<string | null>(null);
+  const [potsOverride, setPotsOverride] = useState<Record<string, number>>({});
 
   const [isHydrated, setIsHydrated] = useState(false);
   const prevHostIdsRef = useRef<string[]>([]);
@@ -181,6 +182,7 @@ export function useWizardState() {
         setRepechajeTeamIds(savedState.repechajeTeamIds);
         setDrawMode(savedState.drawMode);
         setManualGroups(savedState.manualGroups);
+        if (savedState.potsOverride) setPotsOverride(savedState.potsOverride);
         // Initialize refs with loaded values so we don't trigger clear effect
         prevHostIdsRef.current = savedState.hostIds;
         prevCustomQuotasRef.current = savedState.customQuotas;
@@ -265,6 +267,7 @@ export function useWizardState() {
       repechajeTeamIds,
       drawMode,
       manualGroups,
+      potsOverride,
     };
     const timeoutId = setTimeout(() => {
       if (!name.trim()) return;
@@ -284,12 +287,12 @@ export function useWizardState() {
       saveWizardState(name, state);
     }, 500);
     return () => clearTimeout(timeoutId);
-  }, [step, name, type, subType, teamsCount, customQuotas, hostIds, selectedTeamIds, repechajeTeamIds, drawMode, manualGroups, isHydrated]);
+  }, [step, name, type, subType, teamsCount, customQuotas, hostIds, selectedTeamIds, repechajeTeamIds, drawMode, manualGroups, potsOverride, isHydrated]);
 
   // ─── Derived: Sorteo Pots ───
   const numGroups = Math.max(1, Math.floor(totalTeamsExpected / 4));
 
-  const pots = useMemo(() => {
+  const { pots, defaultPotsSizes } = useMemo(() => {
     const allIds = [...hostIds, ...selectedTeamIds, ...repechajeTeamIds];
     const teams = allIds.map(id => availableTeams.find(t => t.id === id)).filter(Boolean) as Team[];
 
@@ -302,15 +305,36 @@ export function useWizardState() {
       return (a.fifaRanking || 9999) - (b.fifaRanking || 9999);
     });
 
-    const result: Team[][] = [[], [], [], []];
+    const defaultPots: Team[][] = [[], [], [], []];
     for (let i = 0; i < sorted.length; i++) {
       const potIndex = Math.floor(i / numGroups);
       if (potIndex < 4) {
-        result[potIndex].push(sorted[i]);
+        defaultPots[potIndex].push(sorted[i]);
       }
     }
-    return result;
-  }, [hostIds, selectedTeamIds, repechajeTeamIds, availableTeams, numGroups]);
+
+    const sizes = defaultPots.map(p => p.length);
+    const result: Team[][] = [[], [], [], []];
+    const placedIds = new Set<string>();
+
+    teams.forEach(t => {
+      const override = potsOverride[t.id];
+      if (override !== undefined && override >= 0 && override < 4) {
+        result[override].push(t);
+        placedIds.add(t.id);
+      }
+    });
+
+    defaultPots.forEach((pot, pIndex) => {
+      pot.forEach(t => {
+        if (!placedIds.has(t.id)) {
+          result[pIndex].push(t);
+        }
+      });
+    });
+
+    return { pots: result, defaultPotsSizes: sizes };
+  }, [hostIds, selectedTeamIds, repechajeTeamIds, availableTeams, numGroups, potsOverride]);
 
   // Teams already assigned in manual groups
   const assignedTeamIds = useMemo(() => {
@@ -474,6 +498,14 @@ export function useWizardState() {
     const teamId = String(active.id);
     const overId = String(over.id);
     const sourceLocation = findTeamLocation(teamId);
+
+    if (overId.startsWith("bombo-")) {
+      const targetPotIndex = parseInt(overId.split("-")[1], 10);
+      if (!isNaN(targetPotIndex) && targetPotIndex >= 0 && targetPotIndex < 4) {
+        setPotsOverride(prev => ({ ...prev, [teamId]: targetPotIndex }));
+      }
+      return;
+    }
 
     // Case 1: Drop on a group slot
     if (overId.startsWith(SLOT_DROP_ID_PREFIX)) {
@@ -652,7 +684,8 @@ export function useWizardState() {
     return true;
   }, [repechajeTeamIds, freedSlots, availableTeams, hostsByConfed]);
 
-  const isStep5Valid = drawMode === "auto" || assignedTeamIds.size === totalTeamsExpected;
+  const isStep5BombosValid = pots.every((p, i) => p.length === defaultPotsSizes[i]);
+  const isStep6DrawValid = drawMode === "auto" || assignedTeamIds.size === totalTeamsExpected;
 
   const isCreatingRef = useRef(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -685,7 +718,7 @@ export function useWizardState() {
         return;
       }
 
-      if (drawMode === "manual" && !isStep5Valid) {
+      if (drawMode === "manual" && !isStep6DrawValid) {
         alert("El sorteo manual no está completo. Asigna todos los equipos a los grupos.");
         return;
       }
@@ -757,6 +790,7 @@ export function useWizardState() {
     setRepechajeSearchQuery,
     numGroups,
     pots,
+    defaultPotsSizes,
     assignedTeamIds,
     activeDragTeamId,
     activeDragTeam,
@@ -777,7 +811,6 @@ export function useWizardState() {
     isStep2Valid,
     isStep3Valid,
     isStep4Valid,
-    isStep5Valid,
     isCustomQuotaValid,
     isCreating,
     toggleHost,
@@ -794,5 +827,9 @@ export function useWizardState() {
     getSlotInvalidity,
     getAssignedGroupName,
     getSelectedCountPerConfed,
+    potsOverride,
+    setPotsOverride,
+    isStep5BombosValid,
+    isStep6DrawValid,
   };
 }
