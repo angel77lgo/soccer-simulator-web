@@ -81,7 +81,7 @@ export default function TeamsPage() {
             />
           </div>
           
-          <Select value={sortBy} onValueChange={(v: any) => setSortBy(v)}>
+          <Select value={sortBy} onValueChange={(v) => setSortBy(v as "ranking" | "name")}>
             <SelectTrigger className="w-full sm:w-36 h-10 border-0 border-b border-border rounded-none focus-visible:ring-0 bg-transparent px-2">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
