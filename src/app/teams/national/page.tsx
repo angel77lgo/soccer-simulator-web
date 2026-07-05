@@ -29,12 +29,12 @@ interface Team {
 }
 
 const CONFEDERATION_LABELS: Record<string, string> = {
-  UEFA: "UEFA (Europe)",
-  CONMEBOL: "CONMEBOL (South America)",
-  CONCACAF: "CONCACAF (North/Central America)",
-  CAF: "CAF (Africa)",
+  UEFA: "UEFA (Europa)",
+  CONMEBOL: "CONMEBOL (Sudamérica)",
+  CONCACAF: "CONCACAF (Norte/Centroamérica)",
+  CAF: "CAF (África)",
   AFC: "AFC (Asia)",
-  OFC: "OFC (Oceania)",
+  OFC: "OFC (Oceanía)",
 };
 
 export default function NationalTeamsPage() {
@@ -78,20 +78,20 @@ export default function NationalTeamsPage() {
       <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-            Teams
+            Equipos
           </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
-            National Teams
+          <h1 className="mt-1.5 font-display text-4xl font-semibold leading-[0.9] tracking-tight md:text-5xl">
+            Selecciones Nacionales
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {filteredTeams.length} of {teams.length} FIFA-affiliated teams
+          <p className="mt-2.5 text-sm text-muted-foreground">
+            {filteredTeams.length} de {teams.length} selecciones afiliadas a FIFA
           </p>
         </div>
         <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center">
           <div className="relative w-full sm:w-72">
             <Search className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search by name or code…"
+              placeholder="Buscar por nombre o código…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="h-10 border-0 border-b border-border bg-transparent pl-7 pr-0 text-sm rounded-none focus-visible:ring-0 focus-visible:border-foreground placeholder:text-muted-foreground/60"
@@ -103,10 +103,10 @@ export default function NationalTeamsPage() {
             onValueChange={(v) => setConfedFilter((v ?? "all") as string)}
           >
             <SelectTrigger className="w-full sm:w-44 h-10 border-0 border-b border-border rounded-none focus-visible:ring-0 bg-transparent px-2">
-              <SelectValue placeholder="Confederation" />
+              <SelectValue placeholder="Confederación" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All confederations</SelectItem>
+              <SelectItem value="all">Todas las confederaciones</SelectItem>
               {confederations.map((c) => (
                 <SelectItem key={c} value={c}>
                   {CONFEDERATION_LABELS[c] ?? c}
@@ -117,11 +117,11 @@ export default function NationalTeamsPage() {
 
           <Select value={sortBy} onValueChange={(v) => setSortBy(v as "ranking" | "name")}>
             <SelectTrigger className="w-full sm:w-36 h-10 border-0 border-b border-border rounded-none focus-visible:ring-0 bg-transparent px-2">
-              <SelectValue placeholder="Sort by" />
+              <SelectValue placeholder="Ordenar por" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ranking">Ranking</SelectItem>
-              <SelectItem value="name">Name</SelectItem>
+              <SelectItem value="name">Nombre</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -137,10 +137,10 @@ export default function NationalTeamsPage() {
             <thead>
               <tr className="text-xs uppercase tracking-[0.12em] text-muted-foreground border-b border-border">
                 <th className="py-3 pr-3 text-left font-medium w-14"></th>
-                <th className="py-3 px-3 text-left font-medium">Code</th>
-                <th className="py-3 px-3 text-left font-medium">Name</th>
-                <th className="py-3 px-3 text-left font-medium">Confederation</th>
-                <th className="py-3 px-3 text-right font-medium">FIFA rank</th>
+                <th className="py-3 px-3 text-left font-medium">Código</th>
+                <th className="py-3 px-3 text-left font-medium">Nombre</th>
+                <th className="py-3 px-3 text-left font-medium">Confederación</th>
+                <th className="py-3 px-3 text-right font-medium">Ranking FIFA</th>
                 <th className="py-3 pl-3 text-right font-medium">Sim rating</th>
               </tr>
             </thead>
@@ -172,7 +172,7 @@ export default function NationalTeamsPage() {
               {filteredTeams.length === 0 && (
                 <tr>
                   <td colSpan={6} className="py-16 text-center text-sm text-muted-foreground">
-                    No teams match your filters.
+                    Ningún equipo coincide con los filtros.
                   </td>
                 </tr>
               )}

@@ -173,9 +173,9 @@ export default function TournamentDashboard() {
 
   const allTeamsStanding = computeUnifiedStandings();
   const tabs = [
-    { key: "groups" as const, label: hasLeaguePhase ? "League Phase" : "Groups", show: hasGroupMatches || hasLeaguePhase },
-    { key: "bracket" as const, label: "Knockout", show: bracketPhases.length > 0 },
-    { key: "standings" as const, label: "Standings", show: allTeamsStanding.length > 0 || leagueStandings.length > 0 },
+    { key: "groups" as const, label: hasLeaguePhase ? "Fase de liga" : "Grupos", show: hasGroupMatches || hasLeaguePhase },
+    { key: "bracket" as const, label: "Eliminatorias", show: bracketPhases.length > 0 },
+    { key: "standings" as const, label: "Clasificación", show: allTeamsStanding.length > 0 || leagueStandings.length > 0 },
   ];
 
   return (
@@ -186,29 +186,29 @@ export default function TournamentDashboard() {
 
       <header className="flex flex-col gap-8">
         <PageHeader
-          eyebrow="Tournament"
-          title={tournament?.name || "Tournament"}
+          eyebrow="Torneo"
+          title={tournament?.name || "Torneo"}
           description={statusLabels[tournament?.status || ""] || tournament?.status}
         >
           <div className="flex flex-wrap gap-2">
             {tournament?.status === "pending" && (
               <Button onClick={handleGenerateMatches} disabled={simulating}>
-                <Play className="mr-1.5 h-4 w-4" /> Generate fixtures
+                <Play className="mr-1.5 h-4 w-4" /> Generar partidos
               </Button>
             )}
             {tournament?.status === "group_stage" && !allGroupsFinished && (
               <Button onClick={handleSimulateGroups} disabled={simulating}>
-                <FastForward className="mr-1.5 h-4 w-4" /> Simulate group stage
+                <FastForward className="mr-1.5 h-4 w-4" /> Simular fase de grupos
               </Button>
             )}
             {tournament?.status === "league_phase" && !allLeagueMatchesFinished && (
               <Button onClick={handleSimulateGroups} disabled={simulating}>
-                <FastForward className="mr-1.5 h-4 w-4" /> Simulate league phase
+                <FastForward className="mr-1.5 h-4 w-4" /> Simular fase de liga
               </Button>
             )}
             {(allGroupsFinished || (hasLeaguePhase && allLeagueMatchesFinished)) && !bracketPhases.length && (
               <Button onClick={handleGenerateKnockout} disabled={simulating}>
-                <Swords className="mr-1.5 h-4 w-4" /> Generate knockout
+                <Swords className="mr-1.5 h-4 w-4" /> Generar eliminatorias
               </Button>
             )}
             {bracketPhases.map((phase) => {
@@ -221,13 +221,13 @@ export default function TournamentDashboard() {
                   onClick={() => handleSimulateRound(phase)}
                   disabled={simulating}
                 >
-                  <FastForward className="mr-1.5 h-4 w-4" /> Simulate {phaseLabels[phase]}
+                  <FastForward className="mr-1.5 h-4 w-4" /> Simular {phaseLabels[phase]}
                 </Button>
               );
             })}
             {isFinished && (
               <Button variant="outline" onClick={() => setShowChampion(true)}>
-                <Crown className="mr-1.5 h-4 w-4" /> View champion
+                <Crown className="mr-1.5 h-4 w-4" /> Ver campeón
               </Button>
             )}
           </div>
@@ -249,9 +249,9 @@ export default function TournamentDashboard() {
           {hasLeaguePhase && (
             <section className="space-y-6">
               <div className="flex items-baseline justify-between border-b border-border pb-3">
-                <h2 className="text-lg font-semibold tracking-tight">League Phase</h2>
+                <h2 className="font-display text-xl font-semibold leading-tight">Fase de liga</h2>
                 <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                  {leagueStandings.length} teams · {leagueMatches.length} matches
+                  {leagueStandings.length} equipos · {leagueMatches.length} partidos
                 </span>
               </div>
 
@@ -279,7 +279,7 @@ export default function TournamentDashboard() {
                     return matchdays.map((matchday, mdIndex) => (
                       <div key={mdIndex}>
                         <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                          Matchday {mdIndex + 1}
+                          Jornada {mdIndex + 1}
                         </p>
                         <div>
                           {matchday.map((match) => (
@@ -299,9 +299,9 @@ export default function TournamentDashboard() {
               {groups.map((group) => (
                 <section key={group.groupName} className="space-y-6">
                   <div className="flex items-baseline justify-between border-b border-border pb-3">
-                    <h2 className="text-lg font-semibold tracking-tight">Group {group.groupName}</h2>
+                    <h2 className="font-display text-xl font-semibold leading-tight">Grupo {group.groupName}</h2>
                     <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                      {group.standings.length} teams
+                      {group.standings.length} equipos
                     </span>
                   </div>
 
@@ -312,7 +312,7 @@ export default function TournamentDashboard() {
                     {(() => {
                       const matches = groupMatches.filter((m) => m.groupId === group.groupId);
                       if (matches.length === 0) {
-                        return <p className="text-sm text-muted-foreground">No fixtures yet.</p>;
+                        return <p className="text-sm text-muted-foreground">No hay partidos aún.</p>;
                       }
                       const matchdays: GroupMatch[][] = [];
                       let remaining = [...matches];
@@ -335,7 +335,7 @@ export default function TournamentDashboard() {
                       return matchdays.map((matchday, mdIndex) => (
                         <div key={mdIndex}>
                           <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                            Matchday {mdIndex + 1}
+                            Jornada {mdIndex + 1}
                           </p>
                           <div>
                             {matchday.map((match) => (
@@ -364,9 +364,9 @@ export default function TournamentDashboard() {
                 return (
                   <section key={phase} className="space-y-6">
                     <div className="flex items-baseline justify-between border-b border-border pb-3">
-                      <h2 className="text-lg font-semibold tracking-tight">{phaseLabels[phase]}</h2>
+                      <h2 className="font-display text-xl font-semibold leading-tight">{phaseLabels[phase]}</h2>
                       <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                        {matches.length} {matches.length === 1 ? "match" : "matches"}
+                        {matches.length} {matches.length === 1 ? "partido" : "partidos"}
                       </span>
                     </div>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -379,7 +379,7 @@ export default function TournamentDashboard() {
               })}
             </div>
           ) : (
-            <div className="overflow-x-auto border-t border-border pt-8">
+            <div className="overflow-x-auto pt-8">
               <div className="flex justify-start min-w-max pb-6">
                 {bracketPhases.map((phase, phaseIndex) => {
                   const matches = bracket[phase] || [];
@@ -423,9 +423,9 @@ export default function TournamentDashboard() {
       {activeTab === "standings" && (allTeamsStanding.length > 0 || leagueStandings.length > 0) && (
         <section>
           <div className="mb-6 flex items-baseline justify-between border-b border-border pb-3">
-            <h2 className="text-lg font-semibold tracking-tight">Overall standings</h2>
+            <h2 className="font-display text-xl font-semibold leading-tight">Clasificación general</h2>
             <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-              {(hasLeaguePhase ? leagueStandings.length : allTeamsStanding.length)} teams
+              {(hasLeaguePhase ? leagueStandings.length : allTeamsStanding.length)} equipos
             </span>
           </div>
           <GroupTable
@@ -438,9 +438,9 @@ export default function TournamentDashboard() {
 
       {!hasGroupMatches && !hasLeaguePhase && !bracketPhases.length && (
         <section className="flex flex-col items-center justify-center border-t border-border py-24 text-center">
-          <p className="text-sm font-medium">No fixtures yet</p>
+          <p className="text-sm font-medium">No hay partidos aún</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Generate the fixtures to begin the tournament.
+            Genera los partidos para comenzar el torneo.
           </p>
         </section>
       )}

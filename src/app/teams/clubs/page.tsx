@@ -81,7 +81,7 @@ export default function ClubsPage() {
     if (filtered.length === 0) {
       return (
         <p className="py-10 text-center text-sm text-muted-foreground">
-          No clubs match your search.
+          Ningún club coincide con la búsqueda.
         </p>
       );
     }
@@ -91,8 +91,8 @@ export default function ClubsPage() {
           <tr className="text-xs uppercase tracking-[0.12em] text-muted-foreground border-b border-border">
             <th className="py-3 pr-3 text-left font-medium w-14"></th>
             <th className="py-3 px-3 text-left font-medium">Club</th>
-            <th className="py-3 px-3 text-left font-medium">Country</th>
-            <th className="py-3 px-3 text-left font-medium">League</th>
+            <th className="py-3 px-3 text-left font-medium">País</th>
+            <th className="py-3 px-3 text-left font-medium">Liga</th>
             <th className="py-3 pl-3 text-right font-medium">Sim rating</th>
           </tr>
         </thead>
@@ -138,23 +138,23 @@ export default function ClubsPage() {
       <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-            Teams
+            Equipos
           </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
-            Clubs
+          <h1 className="mt-1.5 font-display text-4xl font-semibold leading-[0.9] tracking-tight md:text-5xl">
+            Clubes
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {totalForActive} club{totalForActive === 1 ? "" : "s"}
-            {activeConfed !== "all" && ` in ${activeConfed}`}
+          <p className="mt-2.5 text-sm text-muted-foreground">
+            {totalForActive} club{totalForActive === 1 ? "" : "es"}
+            {activeConfed !== "all" && ` en ${CONFEDERATION_LABELS[activeConfed] || activeConfed}`}
             {" · "}
-            {confederations.length} confederations
+            {confederations.length} confederaciones
           </p>
         </div>
         <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center">
           <div className="relative w-full sm:w-72">
             <Search className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search clubs, leagues, countries…"
+              placeholder="Buscar clubes, ligas, países…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="h-10 border-0 border-b border-border bg-transparent pl-7 pr-0 text-sm rounded-none focus-visible:ring-0 focus-visible:border-foreground placeholder:text-muted-foreground/60"
@@ -163,11 +163,11 @@ export default function ClubsPage() {
 
           <Select value={sortBy} onValueChange={(v) => setSortBy(v as "rating" | "name")}>
             <SelectTrigger className="w-full sm:w-36 h-10 border-0 border-b border-border rounded-none focus-visible:ring-0 bg-transparent px-2">
-              <SelectValue placeholder="Sort by" />
+              <SelectValue placeholder="Ordenar por" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="rating">Sim rating</SelectItem>
-              <SelectItem value="name">Name</SelectItem>
+              <SelectItem value="name">Nombre</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -185,7 +185,7 @@ export default function ClubsPage() {
           >
             <TabsList className="mb-6 flex flex-wrap">
               <TabsTrigger value="all">
-                All ({clubs.length})
+                Todos ({clubs.length})
               </TabsTrigger>
               {orderedConfederations.map((c) => (
                 <TabsTrigger key={c} value={c}>

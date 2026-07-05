@@ -30,7 +30,7 @@ export default function TournamentsPage() {
   const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!confirm("Delete this tournament?")) return;
+    if (!confirm("¿Eliminar este torneo?")) return;
     setDeletingId(id);
     try {
       await deleteTournament(id);
@@ -45,13 +45,13 @@ export default function TournamentsPage() {
   return (
     <div className="space-y-10">
       <PageHeader
-        eyebrow="Tournaments"
-        title="All tournaments"
-        description={`${tournaments.length} ${tournaments.length === 1 ? "tournament" : "tournaments"} in your workspace`}
+        eyebrow="Torneos"
+        title="Todos los torneos"
+        description={`${tournaments.length} ${tournaments.length === 1 ? "torneo en tu espacio" : "torneos en tu espacio"}`}
       >
         <Link href="/tournaments/create">
           <Button className="gap-1.5">
-            <Plus className="h-4 w-4" /> New tournament
+            <Plus className="h-4 w-4" /> Nuevo torneo
           </Button>
         </Link>
       </PageHeader>
@@ -62,27 +62,26 @@ export default function TournamentsPage() {
         ) : tournaments.length === 0 ? (
           <EmptyState
             icon={Trophy}
-            title="No tournaments yet"
-            description="Create your first tournament to get started."
+            title="No hay torneos aún"
+            description="Crea tu primer torneo para empezar."
           >
             <Link href="/tournaments/create">
               <Button variant="outline" size="sm" className="gap-1.5">
-                <Plus className="h-3.5 w-3.5" /> Create tournament
+                <Plus className="h-3.5 w-3.5" /> Crear torneo
               </Button>
             </Link>
           </EmptyState>
         ) : (
-          <ul className="divide-y divide-border">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 pt-6">
             {tournaments.map((t) => (
-              <li key={t.id}>
-                <TournamentListItem
-                  tournament={t}
-                  deletingId={deletingId}
-                  onDelete={handleDelete}
-                />
-              </li>
+              <TournamentListItem
+                key={t.id}
+                tournament={t}
+                deletingId={deletingId}
+                onDelete={handleDelete}
+              />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

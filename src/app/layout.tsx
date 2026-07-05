@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Teko } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const teko = Teko({
+  subsets: ["latin"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -16,8 +22,8 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Soccer Tournament Simulator",
-  description: "National team tournament simulation",
+  title: "Simulador de Fútbol",
+  description: "Crea y simula torneos de fútbol",
 };
 
 export default function RootLayout({
@@ -26,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
+    <html lang="es" className={`${teko.variable} ${inter.variable} ${jetbrains.variable}`}>
       <body className="flex h-dvh bg-background text-foreground overflow-hidden font-sans">
         <Sidebar />
         <main className="flex-1 overflow-y-auto">

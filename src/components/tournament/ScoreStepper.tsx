@@ -37,7 +37,7 @@ export function ScoreStepper({
       <StepperButton onClick={() => onChange(Math.max(0, value - 1))} disabled={disabled || value <= 0}>
         −
       </StepperButton>
-      <span className="w-7 text-center font-mono text-sm font-semibold tabular-nums">
+      <span className="w-7 text-center font-display text-lg font-semibold tracking-tight">
         {value}
       </span>
       <StepperButton onClick={() => onChange(value + 1)} disabled={disabled}>

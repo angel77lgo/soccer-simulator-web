@@ -14,18 +14,18 @@ export function GroupTable({ standings, showGoalsDetails = false, championCode }
       <thead>
         <tr className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
           <th className="py-2 pl-1 pr-2 text-left font-medium">#</th>
-          <th className="py-2 px-2 text-left font-medium">Team</th>
+          <th className="py-2 px-2 text-left font-medium">Equipo</th>
+          <th className="py-2 px-2 text-right font-medium">PJ</th>
+          <th className="py-2 px-2 text-right font-medium">G</th>
+          <th className="py-2 px-2 text-right font-medium">E</th>
           <th className="py-2 px-2 text-right font-medium">P</th>
-          <th className="py-2 px-2 text-right font-medium">W</th>
-          <th className="py-2 px-2 text-right font-medium">D</th>
-          <th className="py-2 px-2 text-right font-medium">L</th>
           {showGoalsDetails && (
             <>
               <th className="py-2 px-2 text-right font-medium">GF</th>
-              <th className="py-2 px-2 text-right font-medium">GA</th>
+              <th className="py-2 px-2 text-right font-medium">GC</th>
             </>
           )}
-          <th className="py-2 px-2 text-right font-medium">GD</th>
+          <th className="py-2 px-2 text-right font-medium">DG</th>
           <th className="py-2 pl-2 pr-1 text-right font-medium">Pts</th>
         </tr>
       </thead>

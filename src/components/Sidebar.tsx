@@ -6,10 +6,10 @@ import { Trophy, Flag, Building2, Activity, Circle } from "lucide-react";
 import type { ComponentType } from "react";
 
 const links: { href: string; label: string; icon: ComponentType<{ className?: string }> }[] = [
-  { href: "/tournaments", label: "Tournaments", icon: Trophy },
-  { href: "/teams/national", label: "National Teams", icon: Flag },
-  { href: "/teams/clubs", label: "Clubs", icon: Building2 },
-  { href: "/simulation", label: "Simulate", icon: Activity },
+  { href: "/tournaments", label: "Torneos", icon: Trophy },
+  { href: "/teams/national", label: "Selecciones", icon: Flag },
+  { href: "/teams/clubs", label: "Clubes", icon: Building2 },
+  { href: "/simulation", label: "Simular", icon: Activity },
 ];
 
 export function Sidebar() {
@@ -24,14 +24,19 @@ export function Sidebar() {
         <span className="flex h-7 w-7 items-center justify-center rounded-md bg-field text-field-foreground">
           <Circle className="h-3 w-3 fill-current" />
         </span>
-        <span className="text-[15px] font-semibold tracking-tight text-sidebar-foreground">
-          Pitchside
-        </span>
+        <div className="flex flex-col leading-none">
+          <span className="text-[14px] font-bold tracking-tight text-sidebar-foreground">
+            Simulador
+          </span>
+          <span className="text-[9px] text-muted-foreground font-semibold tracking-widest uppercase mt-0.5">
+            de Fútbol
+          </span>
+        </div>
       </Link>
 
       <nav className="flex flex-1 flex-col gap-0.5 p-3">
         <p className="px-3 pt-2 pb-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Workspace
+          Navegación
         </p>
         {links.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || (href !== "/" && pathname.startsWith(href));
@@ -41,7 +46,7 @@ export function Sidebar() {
               href={href}
               className={`group relative flex items-center gap-3 rounded-md px-3 py-2 text-[13.5px] transition-colors ${
                 active
-                  ? "bg-sidebar-accent font-medium text-sidebar-foreground"
+                  ? "font-medium text-sidebar-foreground"
                   : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
               }`}
             >
@@ -56,7 +61,7 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-sidebar-border px-6 py-4">
-        <p className="text-[11px] text-muted-foreground">Pitchside · v1.0</p>
+        <p className="text-[11px] text-muted-foreground">Simulador de Fútbol · v1.0</p>
       </div>
     </aside>
   );

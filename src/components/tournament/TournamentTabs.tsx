@@ -22,7 +22,7 @@ export function TournamentTabs({
   onViewModeChange,
 }: TournamentTabsProps) {
   return (
-    <div className="flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between">
       <nav className="flex gap-6">
         {tabs.filter((t) => t.show).map((t) => (
           <button
@@ -36,7 +36,7 @@ export function TournamentTabs({
           >
             {t.label}
             {activeTab === t.key && (
-              <span className="absolute -top-px left-0 right-0 h-px bg-foreground" />
+              <span className="absolute -bottom-px left-0 right-0 h-px bg-field" />
             )}
           </button>
         ))}
@@ -50,11 +50,11 @@ export function TournamentTabs({
               onClick={() => onViewModeChange(mode)}
               className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
                 viewMode === mode
-                  ? "bg-foreground text-background"
+                  ? "bg-field text-field-foreground"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {mode === "tree" ? "Tree" : "List"}
+              {mode === "tree" ? "Árbol" : "Lista"}
             </button>
           ))}
         </div>

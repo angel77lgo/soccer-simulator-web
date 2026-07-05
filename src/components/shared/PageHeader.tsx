@@ -14,11 +14,11 @@ export function PageHeader({ eyebrow, title, description, children }: PageHeader
             {eyebrow}
           </p>
         )}
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
+        <h1 className="mt-1.5 text-4xl font-display font-semibold leading-[0.9] tracking-tight md:text-5xl">
           {title}
         </h1>
         {description && (
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2.5 text-sm text-muted-foreground">
             {description}
           </p>
         )}

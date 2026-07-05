@@ -65,7 +65,7 @@ export function BracketMatchCard({ match, onSave }: BracketMatchCardProps) {
 
       {isTied && (
         <div className="mt-3 border-t border-border pt-3">
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Extra time</p>
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Tiempo extra</p>
           <div className="grid grid-cols-2 gap-3">
             <ScoreStepper value={he} onChange={(v) => { setHe(v); commit({ homeExtraScore: v }); }} disabled={loading} />
             <ScoreStepper value={ae} onChange={(v) => { setAe(v); commit({ awayExtraScore: v }); }} disabled={loading} />
@@ -75,7 +75,7 @@ export function BracketMatchCard({ match, onSave }: BracketMatchCardProps) {
 
       {isTied && isExtraTied && (
         <div className="mt-3 border-t border-border pt-3">
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Penalties</p>
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Penales</p>
           <div className="grid grid-cols-2 gap-3">
             <ScoreStepper value={hp} onChange={(v) => { setHp(v); commit({ homePenaltyScore: v }); }} disabled={loading} />
             <ScoreStepper value={ap} onChange={(v) => { setAp(v); commit({ awayPenaltyScore: v }); }} disabled={loading} />
