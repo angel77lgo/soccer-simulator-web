@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Play, FastForward, Swords, Crown } from "lucide-react";
@@ -43,6 +43,7 @@ export default function TournamentDashboard() {
   const [activeTab, setActiveTab] = useState<"groups" | "bracket" | "standings">("groups");
   const [viewMode, setViewMode] = useState<"list" | "tree">("tree");
   const [showChampion, setShowChampion] = useState(false);
+  const championDismissed = useRef(false);
 
   const fetchData = async () => {
     try {
@@ -66,7 +67,7 @@ export default function TournamentDashboard() {
         setLeagueMatches([]);
       }
 
-      if (status?.status === "finished") setShowChampion(true);
+      if (status?.status === "finished" && !championDismissed.current) setShowChampion(true);
     } catch (e) {
       console.error("Failed to fetch tournament data", e);
     } finally {
@@ -181,7 +182,7 @@ export default function TournamentDashboard() {
   return (
     <div className="space-y-12">
       {showChampion && isFinished && tournament && (
-        <ChampionOverlay tournament={tournament} onClose={() => setShowChampion(false)} />
+        <ChampionOverlay tournament={tournament} onClose={() => { championDismissed.current = true; setShowChampion(false); }} />
       )}
 
       <header className="flex flex-col gap-8">
@@ -226,7 +227,7 @@ export default function TournamentDashboard() {
               );
             })}
             {isFinished && (
-              <Button variant="field" onClick={() => setShowChampion(true)}>
+              <Button variant="field" onClick={() => { championDismissed.current = false; setShowChampion(true); }}>
                 <Crown className="mr-1.5 h-4 w-4" /> Ver Campeón
               </Button>
             )}
