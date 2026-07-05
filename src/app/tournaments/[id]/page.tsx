@@ -13,6 +13,7 @@ import {
   generateKnockoutBracket,
   simulateKnockoutRound,
   getTournamentGroupMatches,
+  getTournamentLeaguePhase,
   updateMatchScore,
 } from "@/lib/api";
 import { StandingRow, GroupData, GroupMatch, BracketMatch, TournamentData, MatchSaveData } from "@/types";
@@ -36,6 +37,8 @@ export default function TournamentDashboard() {
   const [groups, setGroups] = useState<GroupData[]>([]);
   const [bracket, setBracket] = useState<Record<string, BracketMatch[]>>({});
   const [groupMatches, setGroupMatches] = useState<GroupMatch[]>([]);
+  const [leagueStandings, setLeagueStandings] = useState<StandingRow[]>([]);
+  const [leagueMatches, setLeagueMatches] = useState<GroupMatch[]>([]);
 
   const [activeTab, setActiveTab] = useState<"groups" | "bracket" | "standings">("groups");
   const [viewMode, setViewMode] = useState<"list" | "tree">("tree");
@@ -53,6 +56,16 @@ export default function TournamentDashboard() {
       setGroups(Array.isArray(standings) ? standings : []);
       setBracket(bracketData || {});
       setGroupMatches(groupMatchesData || []);
+
+      if (status?.hasLeaguePhase) {
+        const league = await getTournamentLeaguePhase(tournamentId);
+        setLeagueStandings(league?.standings ?? []);
+        setLeagueMatches(league?.matches ?? []);
+      } else {
+        setLeagueStandings([]);
+        setLeagueMatches([]);
+      }
+
       if (status?.status === "finished") setShowChampion(true);
     } catch (e) {
       console.error("Failed to fetch tournament data", e);
@@ -75,16 +88,19 @@ export default function TournamentDashboard() {
   }, [tournamentId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const hasGroupMatches = groups.length > 0 && groups[0]?.standings?.length > 0;
+  const hasLeaguePhase = tournament?.hasLeaguePhase === true;
+  const allLeagueMatchesFinished =
+    hasLeaguePhase && leagueMatches.length > 0 && leagueMatches.every((m) => m.status === "finished");
   const allGroupsFinished = hasGroupMatches && groups.every((g) => g.standings.every((s) => s.played >= 3));
   const bracketPhases = phaseOrder.filter((p) => bracket[p]?.length > 0);
   const isFinished = tournament?.status === "finished";
 
   useEffect(() => {
     if (loading) return;
-    if (!hasGroupMatches && bracketPhases.length > 0) {
+    if (!hasGroupMatches && !hasLeaguePhase && bracketPhases.length > 0) {
       setActiveTab("bracket");
     }
-  }, [loading, hasGroupMatches, bracketPhases.length]);
+  }, [loading, hasGroupMatches, hasLeaguePhase, bracketPhases.length]);
 
   const handleGenerateMatches = async () => {
     setSimulating(true);
@@ -157,9 +173,9 @@ export default function TournamentDashboard() {
 
   const allTeamsStanding = computeUnifiedStandings();
   const tabs = [
-    { key: "groups" as const, label: "Groups", show: hasGroupMatches },
+    { key: "groups" as const, label: hasLeaguePhase ? "League Phase" : "Groups", show: hasGroupMatches || hasLeaguePhase },
     { key: "bracket" as const, label: "Knockout", show: bracketPhases.length > 0 },
-    { key: "standings" as const, label: "Standings", show: allTeamsStanding.length > 0 },
+    { key: "standings" as const, label: "Standings", show: allTeamsStanding.length > 0 || leagueStandings.length > 0 },
   ];
 
   return (
@@ -185,7 +201,12 @@ export default function TournamentDashboard() {
                 <FastForward className="mr-1.5 h-4 w-4" /> Simulate group stage
               </Button>
             )}
-            {allGroupsFinished && !bracketPhases.length && (
+            {tournament?.status === "league_phase" && !allLeagueMatchesFinished && (
+              <Button onClick={handleSimulateGroups} disabled={simulating}>
+                <FastForward className="mr-1.5 h-4 w-4" /> Simulate league phase
+              </Button>
+            )}
+            {(allGroupsFinished || (hasLeaguePhase && allLeagueMatchesFinished)) && !bracketPhases.length && (
               <Button onClick={handleGenerateKnockout} disabled={simulating}>
                 <Swords className="mr-1.5 h-4 w-4" /> Generate knockout
               </Button>
@@ -222,61 +243,113 @@ export default function TournamentDashboard() {
         />
       </header>
 
-      {/* Group stage */}
-      {activeTab === "groups" && hasGroupMatches && (
-        <div className="grid grid-cols-1 gap-x-12 gap-y-10 xl:grid-cols-2">
-          {groups.map((group) => (
-            <section key={group.groupName} className="space-y-6">
+      {/* Group stage / League phase */}
+      {activeTab === "groups" && (hasGroupMatches || hasLeaguePhase) && (
+        <div className="space-y-12">
+          {hasLeaguePhase && (
+            <section className="space-y-6">
               <div className="flex items-baseline justify-between border-b border-border pb-3">
-                <h2 className="text-lg font-semibold tracking-tight">Group {group.groupName}</h2>
+                <h2 className="text-lg font-semibold tracking-tight">League Phase</h2>
                 <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                  {group.standings.length} teams
+                  {leagueStandings.length} teams · {leagueMatches.length} matches
                 </span>
               </div>
 
-              <GroupTable standings={group.standings} />
-
-              {/* Matches grouped by matchday */}
-              <div className="space-y-6 pt-2">
-                {(() => {
-                  const matches = groupMatches.filter((m) => m.groupId === group.groupId);
-                  if (matches.length === 0) {
-                    return <p className="text-sm text-muted-foreground">No fixtures yet.</p>;
-                  }
-                  const matchdays: GroupMatch[][] = [];
-                  let remaining = [...matches];
-                  while (remaining.length > 0) {
-                    const currentMatchday: GroupMatch[] = [];
-                    const usedTeams = new Set<string>();
-                    const nextRemaining: GroupMatch[] = [];
-                    for (const match of remaining) {
-                      if (!usedTeams.has(match.homeTeamId) && !usedTeams.has(match.awayTeamId)) {
-                        currentMatchday.push(match);
-                        usedTeams.add(match.homeTeamId);
-                        usedTeams.add(match.awayTeamId);
-                      } else {
-                        nextRemaining.push(match);
+              {leagueMatches.length > 0 && (
+                <div className="grid grid-cols-1 gap-x-12 gap-y-4 xl:grid-cols-2">
+                  {(() => {
+                    const matchdays: GroupMatch[][] = [];
+                    let remaining = [...leagueMatches];
+                    while (remaining.length > 0) {
+                      const currentMatchday: GroupMatch[] = [];
+                      const usedTeams = new Set<string>();
+                      const nextRemaining: GroupMatch[] = [];
+                      for (const match of remaining) {
+                        if (!usedTeams.has(match.homeTeamId) && !usedTeams.has(match.awayTeamId)) {
+                          currentMatchday.push(match);
+                          usedTeams.add(match.homeTeamId);
+                          usedTeams.add(match.awayTeamId);
+                        } else {
+                          nextRemaining.push(match);
+                        }
                       }
+                      matchdays.push(currentMatchday);
+                      remaining = nextRemaining;
                     }
-                    matchdays.push(currentMatchday);
-                    remaining = nextRemaining;
-                  }
-                  return matchdays.map((matchday, mdIndex) => (
-                    <div key={mdIndex}>
-                      <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                        Matchday {mdIndex + 1}
-                      </p>
-                      <div>
-                        {matchday.map((match) => (
-                          <GroupMatchCard key={match.id} match={match} onSave={handleSaveMatchScore} />
-                        ))}
+                    return matchdays.map((matchday, mdIndex) => (
+                      <div key={mdIndex}>
+                        <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                          Matchday {mdIndex + 1}
+                        </p>
+                        <div>
+                          {matchday.map((match) => (
+                            <GroupMatchCard key={match.id} match={match} onSave={handleSaveMatchScore} />
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ));
-                })()}
-              </div>
+                    ));
+                  })()}
+                </div>
+              )}
             </section>
-          ))}
+          )}
+
+          {hasGroupMatches && (
+            <div className="grid grid-cols-1 gap-x-12 gap-y-10 xl:grid-cols-2">
+              {groups.map((group) => (
+                <section key={group.groupName} className="space-y-6">
+                  <div className="flex items-baseline justify-between border-b border-border pb-3">
+                    <h2 className="text-lg font-semibold tracking-tight">Group {group.groupName}</h2>
+                    <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                      {group.standings.length} teams
+                    </span>
+                  </div>
+
+                  <GroupTable standings={group.standings} />
+
+                  {/* Matches grouped by matchday */}
+                  <div className="space-y-6 pt-2">
+                    {(() => {
+                      const matches = groupMatches.filter((m) => m.groupId === group.groupId);
+                      if (matches.length === 0) {
+                        return <p className="text-sm text-muted-foreground">No fixtures yet.</p>;
+                      }
+                      const matchdays: GroupMatch[][] = [];
+                      let remaining = [...matches];
+                      while (remaining.length > 0) {
+                        const currentMatchday: GroupMatch[] = [];
+                        const usedTeams = new Set<string>();
+                        const nextRemaining: GroupMatch[] = [];
+                        for (const match of remaining) {
+                          if (!usedTeams.has(match.homeTeamId) && !usedTeams.has(match.awayTeamId)) {
+                            currentMatchday.push(match);
+                            usedTeams.add(match.homeTeamId);
+                            usedTeams.add(match.awayTeamId);
+                          } else {
+                            nextRemaining.push(match);
+                          }
+                        }
+                        matchdays.push(currentMatchday);
+                        remaining = nextRemaining;
+                      }
+                      return matchdays.map((matchday, mdIndex) => (
+                        <div key={mdIndex}>
+                          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                            Matchday {mdIndex + 1}
+                          </p>
+                          <div>
+                            {matchday.map((match) => (
+                              <GroupMatchCard key={match.id} match={match} onSave={handleSaveMatchScore} />
+                            ))}
+                          </div>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -347,19 +420,23 @@ export default function TournamentDashboard() {
       )}
 
       {/* Standings */}
-      {activeTab === "standings" && allTeamsStanding.length > 0 && (
+      {activeTab === "standings" && (allTeamsStanding.length > 0 || leagueStandings.length > 0) && (
         <section>
           <div className="mb-6 flex items-baseline justify-between border-b border-border pb-3">
             <h2 className="text-lg font-semibold tracking-tight">Overall standings</h2>
             <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-              {allTeamsStanding.length} teams
+              {(hasLeaguePhase ? leagueStandings.length : allTeamsStanding.length)} teams
             </span>
           </div>
-          <GroupTable standings={allTeamsStanding} showGoalsDetails championCode={tournament?.championCode} />
+          <GroupTable
+            standings={hasLeaguePhase ? leagueStandings : allTeamsStanding}
+            showGoalsDetails
+            championCode={tournament?.championCode}
+          />
         </section>
       )}
 
-      {!hasGroupMatches && !bracketPhases.length && (
+      {!hasGroupMatches && !hasLeaguePhase && !bracketPhases.length && (
         <section className="flex flex-col items-center justify-center border-t border-border py-24 text-center">
           <p className="text-sm font-medium">No fixtures yet</p>
           <p className="mt-1 text-sm text-muted-foreground">

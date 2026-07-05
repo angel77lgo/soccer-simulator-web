@@ -1,15 +1,15 @@
 interface StepProgressProps {
   step: number;
   setStep: (step: number) => void;
-  stepLabels: string[];
+  stepLabels: { num: number; label: string }[];
 }
 
 export function StepProgress({ step, setStep, stepLabels }: StepProgressProps) {
   return (
     <ol className="flex flex-wrap items-center gap-2 border-b border-border pb-2">
-      {stepLabels.map((label, i) => {
-        const num = i + 1;
+      {stepLabels.map(({ num, label }, i) => {
         const isActive = step === num;
+        // Since steps might not be contiguous, we check if current step is greater than this step's num
         const isDone = step > num;
         return (
           <li key={num} className="flex items-center gap-2">
@@ -30,7 +30,7 @@ export function StepProgress({ step, setStep, stepLabels }: StepProgressProps) {
                   ? "bg-field/10 text-field"
                   : "bg-secondary"
               }`}>
-                {isDone ? "✓" : num}
+                {isDone ? "✓" : (i + 1)}
               </span>
               <span className="hidden sm:inline">{label}</span>
             </button>

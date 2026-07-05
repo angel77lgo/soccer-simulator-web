@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { createTournament, getTeams, getTemplates } from "@/lib/api";
+import { createTournament, getTeams, getClubs, getTemplates } from "@/lib/api";
 import { Team, Template, WizardState, TeamLocation } from "@/types";
 import {
   STORAGE_KEY_PREFIX,
@@ -29,6 +29,7 @@ export function useWizardState() {
 
   // Step 1 – General info
   const [name, setName] = useState("");
+  const [entityType, setEntityType] = useState<"national" | "club">("national");
   const [type, setType] = useState<"official" | "custom">("official");
   const [subType, setSubType] = useState("");
   const [teamsCount, setTeamsCount] = useState<number | "">(32);
@@ -118,7 +119,7 @@ export function useWizardState() {
       return t?.confederation?.code === confedCode;
     }).length;
 
-  // Group teams by confederation for participant display (excluding hosts and repechaje)
+  // Group teams by confederation for participant display
   const teamsByConfed = useMemo(() => {
     const map: Record<string, Team[]> = {};
     availableTeams.forEach(team => {
@@ -163,8 +164,34 @@ export function useWizardState() {
   // ─── Effects ───
   useEffect(() => {
     getTemplates().then(setTemplates);
-    getTeams().then(setAvailableTeams);
   }, []);
+
+  useEffect(() => {
+    if (entityType === "club") {
+      getClubs().then(clubsData => {
+        const unified = clubsData.map((c: { id: string; name: string; shortName: string; code: string; flagUrl: string; confederation?: string; country: string; simulationRating?: number }) => ({
+          id: c.id,
+          name: c.name,
+          shortName: c.shortName || c.code,
+          fifaCode: c.code,
+          flagUrl: c.flagUrl,
+          confederationId: c.confederation || "UEFA",
+          confederation: {
+            id: c.confederation || "UEFA",
+            name: c.confederation || "UEFA",
+            code: c.confederation || "UEFA",
+          },
+          fifaRanking: c.simulationRating ? 100 - c.simulationRating : 9999, // Lower is better for ranking logic
+          simulationRating: c.simulationRating,
+          // Hack to group by country in participants step
+          _country: c.country
+        }));
+        setAvailableTeams(unified);
+      });
+    } else {
+      getTeams().then(setAvailableTeams);
+    }
+  }, [entityType]);
 
   useEffect(() => {
     const storedName = localStorage.getItem(STORAGE_KEY_PREFIX + "last_name");
@@ -182,6 +209,7 @@ export function useWizardState() {
         setRepechajeTeamIds(savedState.repechajeTeamIds);
         setDrawMode(savedState.drawMode);
         setManualGroups(savedState.manualGroups);
+        if (savedState.entityType) setEntityType(savedState.entityType);
         if (savedState.potsOverride) setPotsOverride(savedState.potsOverride);
         // Initialize refs with loaded values so we don't trigger clear effect
         prevHostIdsRef.current = savedState.hostIds;
@@ -268,6 +296,7 @@ export function useWizardState() {
       drawMode,
       manualGroups,
       potsOverride,
+      entityType,
     };
     const timeoutId = setTimeout(() => {
       if (!name.trim()) return;
@@ -287,7 +316,7 @@ export function useWizardState() {
       saveWizardState(name, state);
     }, 500);
     return () => clearTimeout(timeoutId);
-  }, [step, name, type, subType, teamsCount, customQuotas, hostIds, selectedTeamIds, repechajeTeamIds, drawMode, manualGroups, potsOverride, isHydrated]);
+  }, [step, name, type, subType, teamsCount, customQuotas, hostIds, selectedTeamIds, repechajeTeamIds, drawMode, manualGroups, potsOverride, isHydrated, entityType]);
 
   // ─── Derived: Sorteo Pots ───
   const numGroups = Math.max(1, Math.floor(totalTeamsExpected / 4));
@@ -627,8 +656,22 @@ export function useWizardState() {
     }
   };
 
-  const handleNext = () => setStep(s => Math.min(s + 1, TOTAL_STEPS));
-  const handlePrev = () => setStep(s => Math.max(s - 1, 1));
+  const handleNext = () => setStep(s => {
+    let next = s + 1;
+    if (entityType === "club") {
+      if (next === 2) next = 3;
+      if (next === 4) next = 5;
+    }
+    return Math.min(next, TOTAL_STEPS);
+  });
+  const handlePrev = () => setStep(s => {
+    let prev = s - 1;
+    if (entityType === "club") {
+      if (prev === 4) prev = 3;
+      if (prev === 2) prev = 1;
+    }
+    return Math.max(prev, 1);
+  });
 
   const randomizeConfederation = (confedCode: string) => {
     const quota = effectiveQuotas[confedCode] || 0;
@@ -762,6 +805,8 @@ export function useWizardState() {
     setStep,
     name,
     setName,
+    entityType,
+    setEntityType,
     type,
     setType,
     subType,

@@ -42,14 +42,14 @@ export function BracketNode({ match, onSave }: BracketNodeProps) {
     <div className={`border bg-card transition-colors w-56 ${isFinished ? "border-foreground/15" : "border-border"}`}>
       <div className={`grid grid-cols-[1fr_auto] items-center gap-3 px-3 py-2.5 ${homeWon ? "bg-field/5" : ""}`}>
         <div className="flex items-center gap-2 min-w-0">
-          <TeamFlag code={match.homeCode} size="sm" />
+          <TeamFlag code={match.homeCode} flagUrl={match.homeFlagUrl} size="sm" />
           <span className={`truncate text-sm ${homeWon ? "font-semibold" : ""}`}>{match.homeTeam || "TBD"}</span>
         </div>
         <ScoreStepper value={h} onChange={(v) => { setH(v); commit(v, a); }} disabled={loading} />
       </div>
       <div className={`grid grid-cols-[1fr_auto] items-center gap-3 border-t border-border px-3 py-2.5 ${awayWon ? "bg-field/5" : ""}`}>
         <div className="flex items-center gap-2 min-w-0">
-          <TeamFlag code={match.awayCode} size="sm" />
+          <TeamFlag code={match.awayCode} flagUrl={match.awayFlagUrl} size="sm" />
           <span className={`truncate text-sm ${awayWon ? "font-semibold" : ""}`}>{match.awayTeam || "TBD"}</span>
         </div>
         <ScoreStepper value={a} onChange={(v) => { setA(v); commit(h, v); }} disabled={loading} />

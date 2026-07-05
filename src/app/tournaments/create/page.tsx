@@ -20,15 +20,23 @@ export default function CreateTournamentPage() {
     useSensor(KeyboardSensor)
   );
 
-  const stepLabels = [
-    "General",
-    "Anfitriones",
-    "Participantes",
-    "Repechaje",
-    "Bombos",
-    "Sorteo",
-    "Confirmación",
-  ];
+  const stepLabels = state.entityType === "club"
+    ? [
+        { num: 1, label: "General" },
+        { num: 3, label: "Participantes" },
+        { num: 5, label: "Bombos" },
+        { num: 6, label: "Sorteo" },
+        { num: 7, label: "Confirmación" },
+      ]
+    : [
+        { num: 1, label: "General" },
+        { num: 2, label: "Anfitriones" },
+        { num: 3, label: "Participantes" },
+        { num: 4, label: "Repechaje" },
+        { num: 5, label: "Bombos" },
+        { num: 6, label: "Sorteo" },
+        { num: 7, label: "Confirmación" },
+      ];
 
   return (
     <div className="space-y-10">
@@ -71,6 +79,8 @@ export default function CreateTournamentPage() {
             <WizardStep1General
               name={state.name}
               setName={state.setName}
+              entityType={state.entityType || "national"}
+              setEntityType={state.setEntityType}
               type={state.type}
               setType={state.setType}
               subType={state.subType}

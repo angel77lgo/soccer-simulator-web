@@ -43,7 +43,7 @@ export function GroupTable({ standings, showGoalsDetails = false, championCode }
               </td>
               <td className="py-3 px-2">
                 <div className="flex items-center gap-2">
-                  <TeamFlag code={team.teamCode} size="sm" />
+                  <TeamFlag code={team.teamCode} flagUrl={team.teamFlagUrl} size="sm" />
                   <span className={`truncate ${isChampion ? "font-semibold" : "font-medium"}`}>{team.teamName}</span>
                   <span className="font-mono text-[10px] text-muted-foreground">{team.teamCode}</span>
                 </div>

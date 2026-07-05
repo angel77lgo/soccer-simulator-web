@@ -11,6 +11,8 @@ export interface Team {
     code: string;
   };
   fifaRanking?: number;
+  simulationRating?: number;
+  _country?: string;
 }
 
 export interface Template {
@@ -33,6 +35,7 @@ export interface StandingRow {
   teamId: string;
   teamName: string;
   teamCode: string;
+  teamFlagUrl?: string;
   played: number;
   wins: number;
   draws: number;
@@ -56,8 +59,10 @@ export interface GroupMatch {
   awayTeamId: string;
   homeTeam: string;
   homeCode: string;
+  homeFlagUrl?: string;
   awayTeam: string;
   awayCode: string;
+  awayFlagUrl?: string;
   homeScore: number;
   awayScore: number;
   winnerId: string | null;
@@ -69,8 +74,10 @@ export interface BracketMatch {
   id: string;
   homeTeam: string;
   homeCode: string;
+  homeFlagUrl?: string;
   awayTeam: string;
   awayCode: string;
+  awayFlagUrl?: string;
   homeScore: number;
   awayScore: number;
   home_extra: number;
@@ -86,8 +93,11 @@ export interface TournamentData {
   id?: string;
   name: string;
   status: string;
+  format?: string;
+  hasLeaguePhase?: boolean;
   champion_name?: string | null;
   championCode?: string | null;
+  championFlagUrl?: string | null;
 }
 
 export interface MatchSaveData {
@@ -112,6 +122,7 @@ export interface WizardState {
   drawMode: "auto" | "manual";
   manualGroups: Record<number, string[]>;
   potsOverride?: Record<string, number>;
+  entityType?: "national" | "club";
 }
 
 export type TeamLocation =

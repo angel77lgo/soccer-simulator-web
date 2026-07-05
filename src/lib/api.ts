@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { GroupMatch, StandingRow } from '@/types';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005/api/v1',
@@ -8,6 +9,34 @@ export const getTeams = async () => {
   const res = await api.get('/teams');
   return res.data;
 };
+
+export const getClubs = async (confed?: string) => {
+  const query = confed ? `?confed=${confed}` : '';
+  const res = await api.get(`/teams/clubs${query}`);
+  return res.data;
+};
+
+export const getClubsByConfederation = async () => {
+  const res = await api.get('/teams/clubs/by-confederation');
+  return res.data as Record<string, Club[]>;
+};
+
+export const getClubConfederations = async () => {
+  const res = await api.get('/teams/clubs/confederations');
+  return res.data as string[];
+};
+
+export interface Club {
+  id: string;
+  name: string;
+  shortName?: string;
+  code: string;
+  flagUrl?: string;
+  country: string;
+  league?: string;
+  confederation?: string;
+  simulationRating?: number;
+}
 
 export const getTournaments = async () => {
   const res = await api.get('/tournaments');
@@ -76,6 +105,11 @@ export const simulateKnockoutRound = async (id: string, phase: string) => {
 export const getTournamentGroupMatches = async (id: string) => {
   const res = await api.get(`/tournaments/${id}/group-matches`);
   return res.data;
+};
+
+export const getTournamentLeaguePhase = async (id: string) => {
+  const res = await api.get(`/tournaments/${id}/league-phase`);
+  return res.data as { standings: StandingRow[]; matches: GroupMatch[] };
 };
 
 export const deleteTournament = async (id: string) => {

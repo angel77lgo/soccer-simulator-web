@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Team } from "@/types";
-import { getFlagSvgUrl } from "@/lib/utils";
+import { getFlagSvgUrl, getTeamLogoUrl } from "@/lib/utils";
 
 interface WizardStep3ParticipantsProps {
   effectiveQuotas: Record<string, number>;
@@ -124,10 +124,14 @@ export function WizardStep3Participants({
                             : "hover:bg-secondary border-transparent"
                           } ${isDisabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
                       >
-                        <img src={getFlagSvgUrl(team.fifaCode)} alt={team.name} className="w-7 h-5 object-cover rounded-sm ring-1 ring-border" />
-                        <div className="flex flex-col">
-                          <span className="font-medium">{team.name} ({team.fifaCode})</span>
-                          <span className="text-[10px] sm:text-xs text-muted-foreground/80 tabular-nums">#{team.fifaRanking}</span>
+                        <div className="flex w-7 h-7 shrink-0 items-center justify-center bg-white p-0.5 rounded-sm ring-1 ring-border">
+                           <img src={getTeamLogoUrl(team)} alt={team.name} className="w-full h-full object-contain" />
+                        </div>
+                        <div className="flex flex-col overflow-hidden">
+                          <span className="font-medium truncate" title={team.name}>{team.name}</span>
+                          <span className="text-[10px] sm:text-xs text-muted-foreground/80 truncate">
+                            {team._country ? `${team._country} • ` : ""}{team.fifaCode} • #{team.fifaRanking}
+                          </span>
                         </div>
                       </button>
                     );

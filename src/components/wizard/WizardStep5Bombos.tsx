@@ -9,7 +9,7 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 import { Team } from "@/types";
-import { getFlagSvgUrl } from "@/lib/utils";
+import { getTeamLogoUrl } from "@/lib/utils";
 import { DraggableTeamHandle } from "./DraggableTeamHandle";
 
 interface WizardStep5BombosProps {
@@ -63,7 +63,9 @@ function BomboColumn({
               title={`${team.name} (${team.fifaCode})`}
             >
               <span className="text-[10px] text-muted-foreground w-4 text-right font-mono shrink-0">{i + 1}</span>
-              <img src={getFlagSvgUrl(team.fifaCode)} alt={team.name} className="w-5 h-3.5 object-cover rounded-sm shrink-0" />
+                        <div className="flex w-5 h-5 shrink-0 items-center justify-center bg-white p-0.5 rounded-sm">
+                          <img src={getTeamLogoUrl(team)} alt={team.name} className="w-full h-full object-contain" />
+                        </div>
               <span className="font-medium truncate flex-1">{team.name}</span>
             </div>
             <DraggableTeamHandle teamId={team.id} />
@@ -118,11 +120,13 @@ export function WizardStep5Bombos({
         <DragOverlay dropAnimation={null}>
           {activeDragTeam ? (
             <div className="w-12 h-8 rounded-md border-2 border-foreground/50 bg-card overflow-hidden shadow-2xl cursor-grabbing rotate-3">
-              <img
-                src={getFlagSvgUrl(activeDragTeam.fifaCode)}
-                alt={activeDragTeam.name}
-                className="w-full h-full object-cover"
-              />
+                <div className="flex w-10 h-10 items-center justify-center bg-white p-1">
+                  <img
+                    src={getTeamLogoUrl(activeDragTeam)}
+                    alt={activeDragTeam.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
             </div>
           ) : null}
         </DragOverlay>

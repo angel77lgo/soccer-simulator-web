@@ -4,6 +4,8 @@ import { Template } from "@/types";
 interface WizardStep1GeneralProps {
   name: string;
   setName: (name: string) => void;
+  entityType: "national" | "club";
+  setEntityType: (type: "national" | "club") => void;
   type: "official" | "custom";
   setType: (type: "official" | "custom") => void;
   subType: string;
@@ -23,6 +25,8 @@ interface WizardStep1GeneralProps {
 export function WizardStep1General({
   name,
   setName,
+  entityType,
+  setEntityType,
   type,
   setType,
   subType,
@@ -52,13 +56,35 @@ export function WizardStep1General({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
+          <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Categoría</label>
+          <select
+            className="h-11 w-full appearance-none border-0 border-b border-border bg-transparent px-0 text-base outline-none focus:border-foreground"
+            value={entityType}
+            onChange={e => {
+              setEntityType(e.target.value as "national" | "club");
+              setSelectedTeamIds([]); setHostIds([]); setRepechajeTeamIds([]);
+              if (e.target.value === "club") {
+                setType("official");
+                setSubType("champions_league");
+              } else {
+                setSubType("world_cup");
+              }
+            }}
+          >
+            <option value="national">Selecciones Nacionales</option>
+            <option value="club">Clubes</option>
+          </select>
+        </div>
+
+        <div className="space-y-2">
           <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Tipo de Torneo</label>
           <select
             className="h-11 w-full appearance-none border-0 border-b border-border bg-transparent px-0 text-base outline-none focus:border-foreground"
             value={type}
             onChange={e => setType(e.target.value as "official" | "custom")}
+            disabled={entityType === "club"}
           >
-            <option value="official">Torneo Oficial (FIFA Rules)</option>
+            <option value="official">Torneo Oficial (FIFA/UEFA Rules)</option>
             <option value="custom">Torneo Personalizado</option>
           </select>
         </div>
@@ -70,8 +96,11 @@ export function WizardStep1General({
               className="h-11 w-full appearance-none border-0 border-b border-border bg-transparent px-0 text-base outline-none focus:border-foreground"
               value={subType}
               onChange={e => setSubType(e.target.value)}
+              disabled={entityType === "club"}
             >
-              {Object.entries(templates).map(([key, val]) => (
+              {Object.entries(templates)
+                .filter(([key]) => entityType === "club" ? key === "champions_league" : key !== "champions_league")
+                .map(([key, val]) => (
                 <option key={key} value={key}>{val.name} ({val.teamsCount} equipos)</option>
               ))}
             </select>

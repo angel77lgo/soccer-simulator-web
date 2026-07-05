@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Trophy, Users, Activity, Circle } from "lucide-react";
+import { Trophy, Flag, Building2, Activity, Circle } from "lucide-react";
 import type { ComponentType } from "react";
 
 const links: { href: string; label: string; icon: ComponentType<{ className?: string }> }[] = [
   { href: "/tournaments", label: "Tournaments", icon: Trophy },
-  { href: "/teams", label: "Teams", icon: Users },
+  { href: "/teams/national", label: "National Teams", icon: Flag },
+  { href: "/teams/clubs", label: "Clubs", icon: Building2 },
   { href: "/simulation", label: "Simulate", icon: Activity },
 ];
 

@@ -1,6 +1,5 @@
 import { Team, Template } from "@/types";
-import { getFlagSvgUrl } from "@/lib/utils";
-
+import { getFlagSvgUrl, getTeamLogoUrl } from "@/lib/utils";
 interface WizardStep6ConfirmProps {
   name: string;
   type: "official" | "custom";
@@ -55,7 +54,9 @@ export function WizardStep6Confirm({
           <div className="flex flex-wrap gap-2">
             {hostTeams.map(team => (
               <div key={team.id} className="flex items-center gap-1.5 bg-card border border-border rounded-md px-2 py-1 text-xs font-medium">
-                <img src={getFlagSvgUrl(team.fifaCode)} alt={team.name} className="w-5 h-3.5 object-cover rounded-sm" />
+                <div className="flex w-5 h-5 shrink-0 items-center justify-center bg-white p-0.5 rounded-sm">
+                  <img src={getTeamLogoUrl(team)} alt={team.name} className="w-full h-full object-contain" />
+                </div>
                 {team.name} ({team.fifaCode})
               </div>
             ))}
@@ -76,7 +77,9 @@ export function WizardStep6Confirm({
             return (
               <div key={team.id} className={`flex items-center gap-2 p-1.5 border rounded-md text-xs ${isRepechaje ? "bg-secondary border-foreground/15" : "bg-card border-border"
                 }`}>
-                <img src={getFlagSvgUrl(team.fifaCode)} alt={team.name} className="w-6 h-4 object-cover rounded-sm ring-1 ring-border" />
+                <div className="flex w-6 h-6 shrink-0 items-center justify-center bg-white p-0.5 rounded-sm ring-1 ring-border">
+                  <img src={getTeamLogoUrl(team)} alt={team.name} className="w-full h-full object-contain" />
+                </div>
                 <span className="font-medium truncate">{team.name} ({team.fifaCode})</span>
                 {isRepechaje && <span className="text-[9px] font-semibold text-field ml-auto">PK</span>}
               </div>

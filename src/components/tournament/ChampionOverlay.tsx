@@ -31,7 +31,7 @@ export function ChampionOverlay({ tournament, onClose }: ChampionOverlayProps) {
           Champion
         </p>
         <div className="my-8 flex justify-center">
-          <TeamFlag code={tournament.championCode || ""} size="xl" />
+          <TeamFlag code={tournament.championCode || ""} flagUrl={tournament.championFlagUrl || ""} size="xl" />
         </div>
         <h1 className="text-5xl font-semibold tracking-tight md:text-7xl">
           {tournament.champion_name}

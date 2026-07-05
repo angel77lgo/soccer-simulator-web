@@ -67,22 +67,14 @@ export function WizardStep5Draw({
   return (
     <div className="space-y-6">
       <div className="flex gap-1 p-1 bg-secondary rounded-lg w-full max-w-sm mx-auto">
-        <button
-          type="button"
-          onClick={() => setDrawMode("auto")}
-          className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${drawMode === "auto" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
-            }`}
+        <select
+          value={drawMode}
+          onChange={e => setDrawMode(e.target.value as "auto" | "manual")}
+          className="h-11 w-full appearance-none border-0 border-b border-border bg-transparent px-0 text-base outline-none focus:border-foreground"
         >
-          Automático
-        </button>
-        <button
-          type="button"
-          onClick={() => setDrawMode("manual")}
-          className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${drawMode === "manual" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
-            }`}
-        >
-          Manual
-        </button>
+          <option value="auto">Sorteo Automático</option>
+          {numGroups <= 8 && <option value="manual">Sorteo Manual (Drag & Drop)</option>}
+        </select>
       </div>
 
       {drawMode === "auto" ? (

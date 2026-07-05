@@ -44,3 +44,8 @@ export function getFlagSvgUrl(fifaCode: string): string {
   if (!isoCode) return `https://flagcdn.com/${cleanCode.substring(0, 2).toLowerCase()}.svg`;
   return `https://flagcdn.com/${isoCode}.svg`;
 }
+
+export function getTeamLogoUrl(team: { fifaCode: string; flagUrl?: string }): string {
+  if (team.flagUrl) return team.flagUrl;
+  return getFlagSvgUrl(team.fifaCode);
+}

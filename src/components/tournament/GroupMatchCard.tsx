@@ -32,7 +32,7 @@ export function GroupMatchCard({ match, onSave }: GroupMatchCardProps) {
       <div className="flex items-center gap-2.5 min-w-0 justify-end text-right">
         <span className="truncate text-sm font-medium">{match.homeTeam}</span>
         <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{match.homeCode}</span>
-        <TeamFlag code={match.homeCode} />
+        <TeamFlag code={match.homeCode} flagUrl={match.homeFlagUrl} />
       </div>
       <div className="flex items-center gap-3">
         <ScoreStepper value={homeScore} onChange={(v) => { setHomeScore(v); commit(v, awayScore); }} disabled={loading} />
@@ -40,7 +40,7 @@ export function GroupMatchCard({ match, onSave }: GroupMatchCardProps) {
         <ScoreStepper value={awayScore} onChange={(v) => { setAwayScore(v); commit(homeScore, v); }} disabled={loading} />
       </div>
       <div className="flex items-center gap-2.5 min-w-0">
-        <TeamFlag code={match.awayCode} />
+        <TeamFlag code={match.awayCode} flagUrl={match.awayFlagUrl} />
         <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{match.awayCode}</span>
         <span className="truncate text-sm font-medium">{match.awayTeam}</span>
       </div>
