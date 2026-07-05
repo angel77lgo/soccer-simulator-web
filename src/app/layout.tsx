@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Teko } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
+import { TopNav } from "@/components/TopNav";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,13 +34,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${teko.variable} ${inter.variable} ${jetbrains.variable}`}>
-      <body className="flex h-dvh bg-background text-foreground overflow-hidden font-sans">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-6xl px-8 py-10 md:px-12 md:py-14">
-            {children}
-          </div>
-        </main>
+      <body className="flex h-dvh flex-col bg-background text-foreground overflow-hidden font-sans">
+        <ThemeProvider>
+          <TopNav />
+          <main className="flex-1 overflow-y-auto">
+            <div className="mx-auto w-full max-w-6xl px-5 py-6 md:px-8 md:py-10">
+              {children}
+            </div>
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

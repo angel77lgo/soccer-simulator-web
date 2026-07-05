@@ -50,7 +50,7 @@ export default function TournamentsPage() {
         description={`${tournaments.length} ${tournaments.length === 1 ? "torneo en tu espacio" : "torneos en tu espacio"}`}
       >
         <Link href="/tournaments/create">
-          <Button className="gap-1.5">
+          <Button variant="field" className="gap-1.5">
             <Plus className="h-4 w-4" /> Nuevo torneo
           </Button>
         </Link>
@@ -66,7 +66,7 @@ export default function TournamentsPage() {
             description="Crea tu primer torneo para empezar."
           >
             <Link href="/tournaments/create">
-              <Button variant="outline" size="sm" className="gap-1.5">
+              <Button variant="field" size="sm" className="gap-1.5">
                 <Plus className="h-3.5 w-3.5" /> Crear torneo
               </Button>
             </Link>

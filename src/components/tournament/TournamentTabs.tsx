@@ -22,35 +22,32 @@ export function TournamentTabs({
   onViewModeChange,
 }: TournamentTabsProps) {
   return (
-    <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between">
-      <nav className="flex gap-6">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex gap-1 rounded-lg bg-secondary p-1">
         {tabs.filter((t) => t.show).map((t) => (
           <button
             key={t.key}
             onClick={() => onTabChange(t.key)}
-            className={`relative pb-1 text-sm font-medium transition-colors ${
+            className={`rounded-md px-3.5 py-1.5 text-sm font-medium transition-colors ${
               activeTab === t.key
-                ? "text-foreground"
+                ? "bg-card text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             {t.label}
-            {activeTab === t.key && (
-              <span className="absolute -bottom-px left-0 right-0 h-px bg-field" />
-            )}
           </button>
         ))}
-      </nav>
+      </div>
 
       {showViewModeToggle && onViewModeChange && (
-        <div className="flex gap-1 text-xs">
+        <div className="flex gap-1 rounded-lg bg-secondary p-1">
           {(["tree", "list"] as const).map((mode) => (
             <button
               key={mode}
               onClick={() => onViewModeChange(mode)}
-              className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
+              className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
                 viewMode === mode
-                  ? "bg-field text-field-foreground"
+                  ? "bg-card text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >

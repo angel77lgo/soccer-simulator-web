@@ -42,78 +42,78 @@
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.25);
-  --radius-2xl: calc(var(--radius) * 1.75);
+  --radius-xl: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.5);
 }
 
 :root {
-  --background: #F8F7F4;
+  --background: #F4F1EA;
   --foreground: #0C0F0D;
   --card: #FFFFFF;
   --card-foreground: #0C0F0D;
   --popover: #FFFFFF;
   --popover-foreground: #0C0F0D;
   --primary: #0C0F0D;
-  --primary-foreground: #F8F7F4;
-  --secondary: #F0EEEA;
+  --primary-foreground: #F4F1EA;
+  --secondary: #EDE9E0;
   --secondary-foreground: #0C0F0D;
-  --muted: #F0EEEA;
-  --muted-foreground: #6B6B6B;
-  --accent: #F0EEEA;
+  --muted: #EDE9E0;
+  --muted-foreground: #7A756A;
+  --accent: #EDE9E0;
   --accent-foreground: #0C0F0D;
   --destructive: #B91C1C;
-  --border: #E4E0D8;
-  --input: #E4E0D8;
-  --ring: #0D5C32;
-  --chart-1: #0D5C32;
-  --chart-2: #6B6B6B;
+  --border: #E2DCD0;
+  --input: #E2DCD0;
+  --ring: #007A40;
+  --chart-1: #007A40;
+  --chart-2: #7A756A;
   --chart-3: #0C0F0D;
-  --chart-4: #B0ACA0;
-  --chart-5: #E0DBCE;
+  --chart-4: #BFB8AA;
+  --chart-5: #E2DCD0;
   --radius: 0.5rem;
   --sidebar: #FFFFFF;
   --sidebar-foreground: #0C0F0D;
   --sidebar-primary: #0C0F0D;
-  --sidebar-primary-foreground: #F8F7F4;
-  --sidebar-accent: #F0EEEA;
+  --sidebar-primary-foreground: #F4F1EA;
+  --sidebar-accent: #EDE9E0;
   --sidebar-accent-foreground: #0C0F0D;
-  --sidebar-border: #E4E0D8;
-  --sidebar-ring: #0D5C32;
-  --field: #0D5C32;
-  --field-foreground: #F8F7F4;
-  --hairline: #E4E0D8;
+  --sidebar-border: #E2DCD0;
+  --sidebar-ring: #007A40;
+  --field: #007A40;
+  --field-foreground: #F4F1EA;
+  --hairline: #E2DCD0;
 }
 
 .dark {
-  --background: #080B09;
-  --foreground: #F0EDE4;
-  --card: #0D100E;
-  --card-foreground: #F0EDE4;
-  --popover: #0D100E;
-  --popover-foreground: #F0EDE4;
-  --primary: #F0EDE4;
-  --primary-foreground: #080B09;
-  --secondary: #151B17;
-  --secondary-foreground: #F0EDE4;
-  --muted: #151B17;
-  --muted-foreground: #9A9A93;
-  --accent: #151B17;
-  --accent-foreground: #F0EDE4;
+  --background: #070A08;
+  --foreground: #EDE8DC;
+  --card: #0B0F0D;
+  --card-foreground: #EDE8DC;
+  --popover: #0B0F0D;
+  --popover-foreground: #EDE8DC;
+  --primary: #EDE8DC;
+  --primary-foreground: #070A08;
+  --secondary: #131713;
+  --secondary-foreground: #EDE8DC;
+  --muted: #131713;
+  --muted-foreground: #8A857A;
+  --accent: #131713;
+  --accent-foreground: #EDE8DC;
   --destructive: #E5484D;
-  --border: #262B26;
-  --input: #262B26;
-  --ring: #0D5C32;
-  --sidebar: #0D100E;
-  --sidebar-foreground: #F0EDE4;
-  --sidebar-primary: #F0EDE4;
-  --sidebar-primary-foreground: #080B09;
-  --sidebar-accent: #151B17;
-  --sidebar-accent-foreground: #F0EDE4;
-  --sidebar-border: #262B26;
-  --sidebar-ring: #0D5C32;
-  --field: #0D5C32;
-  --field-foreground: #080B09;
-  --hairline: #262B26;
+  --border: #20251F;
+  --input: #20251F;
+  --ring: #007A40;
+  --sidebar: #0B0F0D;
+  --sidebar-foreground: #EDE8DC;
+  --sidebar-primary: #EDE8DC;
+  --sidebar-primary-foreground: #070A08;
+  --sidebar-accent: #131713;
+  --sidebar-accent-foreground: #EDE8DC;
+  --sidebar-border: #20251F;
+  --sidebar-ring: #007A40;
+  --field: #007A40;
+  --field-foreground: #070A08;
+  --hairline: #20251F;
 }
 
 @layer base {
@@ -128,30 +128,30 @@
     font-feature-settings: "ss01", "cv11", "tnum";
   }
   ::selection {
-    background: #0C0F0D;
-    color: #F8F7F4;
+    background: #007A40;
+    color: #F4F1EA;
   }
   .dark ::selection {
-    background: #F0EDE4;
-    color: #080B09;
+    background: #007A40;
+    color: #EDE8DC;
   }
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D9D6CE;
+  background: var(--border);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B8B5AC;
+  background: var(--muted-foreground);
   background-clip: content-box;
   border: 2px solid transparent;
 }

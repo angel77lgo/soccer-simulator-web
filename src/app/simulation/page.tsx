@@ -86,6 +86,7 @@ export default function SimulationPage() {
 
         <div className="mt-10 flex flex-col items-center gap-3">
           <Button
+            variant="field"
             size="lg"
             onClick={handleSimulate}
             disabled={!canSimulate}
@@ -106,7 +107,7 @@ export default function SimulationPage() {
             Tiempo regular
           </p>
 
-          <div className="mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-6 md:gap-12">
+          <div className="mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-10">
             <Side
               team={homeTeam}
               isWinner={result.homeGoals > result.awayGoals}
@@ -114,17 +115,24 @@ export default function SimulationPage() {
             />
             <div className="flex flex-col items-center">
               <div className="relative">
-                <div className="absolute inset-0 -m-8 rounded-full bg-field/5 blur-3xl" />
-                <div className="relative font-display text-7xl font-semibold leading-[0.8] tracking-tight md:text-8xl">
-                  {result.homeGoals}
-                  <span className="mx-3 text-muted-foreground/30">–</span>
-                  {result.awayGoals}
+                <div className="absolute -inset-12 rounded-full bg-field/5 blur-[60px]" />
+                <div className="relative flex items-center gap-4 font-display text-6xl font-semibold leading-[0.8] tracking-tight md:text-8xl">
+                  <span className={result.homeGoals >= result.awayGoals ? "text-foreground" : "text-muted-foreground/40"}>
+                    {result.homeGoals}
+                  </span>
+                  <span className="text-3xl text-muted-foreground/20 md:text-5xl">–</span>
+                  <span className={result.awayGoals >= result.homeGoals ? "text-foreground" : "text-muted-foreground/40"}>
+                    {result.awayGoals}
+                  </span>
                 </div>
               </div>
               {result.homeGoals === result.awayGoals && result.homePenalties !== undefined && result.awayPenalties !== undefined && (
-                <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                  Penales {result.homePenalties} – {result.awayPenalties}
-                </p>
+                <div className="mt-4 flex items-center gap-2 rounded-full border border-border bg-secondary/40 px-4 py-1.5">
+                  <span className="font-mono text-xs font-semibold tabular-nums text-foreground">{result.homePenalties}</span>
+                  <span className="text-xs text-muted-foreground/40">–</span>
+                  <span className="font-mono text-xs font-semibold tabular-nums text-foreground">{result.awayPenalties}</span>
+                  <span className="ml-1 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Penales</span>
+                </div>
               )}
             </div>
             <Side

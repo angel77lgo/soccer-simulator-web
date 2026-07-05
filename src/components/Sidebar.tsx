@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Trophy, Flag, Building2, Activity, Circle } from "lucide-react";
+import { Trophy, Flag, Building2, Activity, Circle, Sun, Moon } from "lucide-react";
 import type { ComponentType } from "react";
+import { useAppStore } from "@/store";
 
 const links: { href: string; label: string; icon: ComponentType<{ className?: string }> }[] = [
   { href: "/tournaments", label: "Torneos", icon: Trophy },
@@ -14,21 +15,22 @@ const links: { href: string; label: string; icon: ComponentType<{ className?: st
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useAppStore();
 
   return (
     <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
       <Link
         href="/tournaments"
-        className="flex h-16 items-center gap-2.5 border-b border-sidebar-border px-6"
+        className="flex h-16 items-center gap-3 border-b border-sidebar-border px-5 bg-gradient-to-r from-field/[0.04] to-transparent"
       >
-        <span className="flex h-7 w-7 items-center justify-center rounded-md bg-field text-field-foreground">
-          <Circle className="h-3 w-3 fill-current" />
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-field text-field-foreground shadow-sm shadow-field/20">
+          <Circle className="h-4 w-4 fill-current" />
         </span>
         <div className="flex flex-col leading-none">
-          <span className="text-[14px] font-bold tracking-tight text-sidebar-foreground">
+          <span className="text-[15px] font-bold tracking-tight text-sidebar-foreground">
             Simulador
           </span>
-          <span className="text-[9px] text-muted-foreground font-semibold tracking-widest uppercase mt-0.5">
+          <span className="text-[8px] text-muted-foreground font-semibold tracking-[0.2em] uppercase mt-0.5">
             de Fútbol
           </span>
         </div>
@@ -60,8 +62,21 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-sidebar-border px-6 py-4">
-        <p className="text-[11px] text-muted-foreground">Simulador de Fútbol · v1.0</p>
+      <div className="border-t border-sidebar-border px-4 py-3">
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] text-muted-foreground">Simulador de Fútbol · v1.0</p>
+          <button
+            onClick={toggleTheme}
+            className="rounded-md p-1.5 text-muted-foreground/50 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            aria-label={theme === "dark" ? "Modo claro" : "Modo oscuro"}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-3.5 w-3.5" />
+            ) : (
+              <Moon className="h-3.5 w-3.5" />
+            )}
+          </button>
+        </div>
       </div>
     </aside>
   );

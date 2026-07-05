@@ -192,22 +192,22 @@ export default function TournamentDashboard() {
         >
           <div className="flex flex-wrap gap-2">
             {tournament?.status === "pending" && (
-              <Button onClick={handleGenerateMatches} disabled={simulating}>
+              <Button variant="field" onClick={handleGenerateMatches} disabled={simulating}>
                 <Play className="mr-1.5 h-4 w-4" /> Generar partidos
               </Button>
             )}
             {tournament?.status === "group_stage" && !allGroupsFinished && (
-              <Button onClick={handleSimulateGroups} disabled={simulating}>
+              <Button variant="field" onClick={handleSimulateGroups} disabled={simulating}>
                 <FastForward className="mr-1.5 h-4 w-4" /> Simular fase de grupos
               </Button>
             )}
             {tournament?.status === "league_phase" && !allLeagueMatchesFinished && (
-              <Button onClick={handleSimulateGroups} disabled={simulating}>
+              <Button variant="field" onClick={handleSimulateGroups} disabled={simulating}>
                 <FastForward className="mr-1.5 h-4 w-4" /> Simular fase de liga
               </Button>
             )}
             {(allGroupsFinished || (hasLeaguePhase && allLeagueMatchesFinished)) && !bracketPhases.length && (
-              <Button onClick={handleGenerateKnockout} disabled={simulating}>
+              <Button variant="field" onClick={handleGenerateKnockout} disabled={simulating}>
                 <Swords className="mr-1.5 h-4 w-4" /> Generar eliminatorias
               </Button>
             )}
@@ -248,7 +248,8 @@ export default function TournamentDashboard() {
         <div className="space-y-12">
           {hasLeaguePhase && (
             <section className="space-y-6">
-              <div className="flex items-baseline justify-between border-b border-border pb-3">
+              <div className="flex items-baseline justify-between border-b border-border pb-3 pl-3 relative">
+                <span className="absolute left-0 top-0 bottom-3 w-0.5 rounded-full bg-field" />
                 <h2 className="font-display text-xl font-semibold leading-tight">Fase de liga</h2>
                 <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
                   {leagueStandings.length} equipos · {leagueMatches.length} partidos
@@ -278,7 +279,7 @@ export default function TournamentDashboard() {
                     }
                     return matchdays.map((matchday, mdIndex) => (
                       <div key={mdIndex}>
-                        <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        <p className="mb-1 text-xs font-display font-semibold tracking-wide text-muted-foreground">
                           Jornada {mdIndex + 1}
                         </p>
                         <div>
@@ -298,7 +299,8 @@ export default function TournamentDashboard() {
             <div className="grid grid-cols-1 gap-x-12 gap-y-10 xl:grid-cols-2">
               {groups.map((group) => (
                 <section key={group.groupName} className="space-y-6">
-                  <div className="flex items-baseline justify-between border-b border-border pb-3">
+                  <div className="flex items-baseline justify-between border-b border-border pb-3 pl-3 relative">
+                    <span className="absolute left-0 top-0 bottom-3 w-0.5 rounded-full bg-field" />
                     <h2 className="font-display text-xl font-semibold leading-tight">Grupo {group.groupName}</h2>
                     <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
                       {group.standings.length} equipos
@@ -334,7 +336,7 @@ export default function TournamentDashboard() {
                       }
                       return matchdays.map((matchday, mdIndex) => (
                         <div key={mdIndex}>
-                          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                          <p className="mb-1 text-xs font-display font-semibold tracking-wide text-muted-foreground">
                             Jornada {mdIndex + 1}
                           </p>
                           <div>
@@ -363,7 +365,8 @@ export default function TournamentDashboard() {
                 if (matches.length === 0) return null;
                 return (
                   <section key={phase} className="space-y-6">
-                    <div className="flex items-baseline justify-between border-b border-border pb-3">
+                    <div className="flex items-baseline justify-between border-b border-border pb-3 pl-3 relative">
+                      <span className="absolute left-0 top-0 bottom-3 w-0.5 rounded-full bg-field" />
                       <h2 className="font-display text-xl font-semibold leading-tight">{phaseLabels[phase]}</h2>
                       <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
                         {matches.length} {matches.length === 1 ? "partido" : "partidos"}
@@ -395,15 +398,15 @@ export default function TournamentDashboard() {
                             <BracketNode match={match} onSave={handleSaveMatchScore} />
                             {!isLastPhase && (
                               <>
-                                <div className="absolute top-1/2 left-[224px] w-12 border-t border-border" />
+                                <div className="absolute top-1/2 left-[224px] w-12 border-t border-dashed border-border/60" />
                                 {matchIndex % 2 === 0 && (
                                   <>
-                                    <div className="absolute top-1/2 left-[272px] w-3 border-r border-t border-border h-[calc(50%+2rem)] origin-top" />
-                                    <div className="absolute top-[calc(100%+2rem)] left-[272px] w-12 border-t border-border" />
+                                    <div className="absolute top-1/2 left-[272px] w-3 border-r border-dashed border-t border-border/60 h-[calc(50%+2rem)] origin-top" />
+                                    <div className="absolute top-[calc(100%+2rem)] left-[272px] w-12 border-t border-dashed border-border/60" />
                                   </>
                                 )}
                                 {matchIndex % 2 === 1 && (
-                                  <div className="absolute bottom-1/2 left-[272px] w-3 border-r border-b border-border h-[calc(50%+2rem)] origin-bottom" />
+                                  <div className="absolute bottom-1/2 left-[272px] w-3 border-r border-dashed border-b border-border/60 h-[calc(50%+2rem)] origin-bottom" />
                                 )}
                               </>
                             )}
@@ -422,7 +425,8 @@ export default function TournamentDashboard() {
       {/* Standings */}
       {activeTab === "standings" && (allTeamsStanding.length > 0 || leagueStandings.length > 0) && (
         <section>
-          <div className="mb-6 flex items-baseline justify-between border-b border-border pb-3">
+          <div className="mb-6 flex items-baseline justify-between border-b border-border pb-3 pl-3 relative">
+            <span className="absolute left-0 top-0 bottom-3 w-0.5 rounded-full bg-field" />
             <h2 className="font-display text-xl font-semibold leading-tight">Clasificación general</h2>
             <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
               {(hasLeaguePhase ? leagueStandings.length : allTeamsStanding.length)} equipos
@@ -437,9 +441,12 @@ export default function TournamentDashboard() {
       )}
 
       {!hasGroupMatches && !hasLeaguePhase && !bracketPhases.length && (
-        <section className="flex flex-col items-center justify-center border-t border-border py-24 text-center">
+        <section className="flex flex-col items-center justify-center border-t border-border py-20 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary ring-1 ring-border mb-4">
+            <Play className="h-5 w-5 text-muted-foreground/50" strokeWidth={1.5} />
+          </div>
           <p className="text-sm font-medium">No hay partidos aún</p>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground max-w-xs">
             Genera los partidos para comenzar el torneo.
           </p>
         </section>

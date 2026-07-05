@@ -28,20 +28,20 @@ export function GroupMatchCard({ match, onSave }: GroupMatchCardProps) {
   };
 
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-border py-3 last:border-0">
-      <div className="flex items-center gap-2.5 min-w-0 justify-end text-right">
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b border-border py-2.5 last:border-0">
+      <div className="flex items-center gap-2 min-w-0 justify-end text-right">
         <span className="truncate text-sm font-medium">{match.homeTeam}</span>
-        <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{match.homeCode}</span>
+        <span className="font-mono text-[10px] uppercase text-muted-foreground hidden sm:inline">{match.homeCode}</span>
         <TeamFlag code={match.homeCode} flagUrl={match.homeFlagUrl} />
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <ScoreStepper value={homeScore} onChange={(v) => { setHomeScore(v); commit(v, awayScore); }} disabled={loading} />
-        <span className="text-muted-foreground/40 text-xs">vs</span>
+        <span className="text-muted-foreground/30 text-[10px] font-medium">vs</span>
         <ScoreStepper value={awayScore} onChange={(v) => { setAwayScore(v); commit(homeScore, v); }} disabled={loading} />
       </div>
-      <div className="flex items-center gap-2.5 min-w-0">
+      <div className="flex items-center gap-2 min-w-0">
         <TeamFlag code={match.awayCode} flagUrl={match.awayFlagUrl} />
-        <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{match.awayCode}</span>
+        <span className="font-mono text-[10px] uppercase text-muted-foreground hidden sm:inline">{match.awayCode}</span>
         <span className="truncate text-sm font-medium">{match.awayTeam}</span>
       </div>
     </div>
