@@ -5,6 +5,8 @@ import { WizardStep1General } from './WizardStep1General'
 const defaultProps = {
   name: '',
   setName: vi.fn(),
+  entityType: 'national' as const,
+  setEntityType: vi.fn(),
   type: 'official' as const,
   setType: vi.fn(),
   subType: 'world_cup',
@@ -38,11 +40,19 @@ describe('WizardStep1General', () => {
     expect(setName).toHaveBeenCalledWith('My Tournament')
   })
 
+  it('calls setEntityType when category select changes', () => {
+    const setEntityType = vi.fn()
+    render(<WizardStep1General {...defaultProps} setEntityType={setEntityType} />)
+    const selects = screen.getAllByRole('combobox')
+    fireEvent.change(selects[0], { target: { value: 'club' } })
+    expect(setEntityType).toHaveBeenCalledWith('club')
+  })
+
   it('calls setType when type select changes', () => {
     const setType = vi.fn()
     render(<WizardStep1General {...defaultProps} setType={setType} />)
     const selects = screen.getAllByRole('combobox')
-    fireEvent.change(selects[0], { target: { value: 'custom' } })
+    fireEvent.change(selects[1], { target: { value: 'custom' } })
     expect(setType).toHaveBeenCalledWith('custom')
   })
 

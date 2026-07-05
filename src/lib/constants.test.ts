@@ -54,7 +54,7 @@ describe('constants', () => {
     }
   })
 
-  it('TOTAL_STEPS is 6', () => {
-    expect(TOTAL_STEPS).toBe(6)
+  it('TOTAL_STEPS is 7', () => {
+    expect(TOTAL_STEPS).toBe(7)
   })
 })

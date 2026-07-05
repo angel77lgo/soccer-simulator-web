@@ -43,10 +43,11 @@ describe('WizardStep5Draw', () => {
     expect(screen.getByText('Sorteo Manual:')).toBeInTheDocument()
   })
 
-  it('calls setDrawMode when clicking buttons', () => {
+  it('calls setDrawMode when select changes', () => {
     const setDrawMode = vi.fn()
     render(<WizardStep5Draw {...defaultProps} setDrawMode={setDrawMode} />)
-    fireEvent.click(screen.getByText('Manual'))
+    const select = screen.getByRole('combobox')
+    fireEvent.change(select, { target: { value: 'manual' } })
     expect(setDrawMode).toHaveBeenCalledWith('manual')
   })
 

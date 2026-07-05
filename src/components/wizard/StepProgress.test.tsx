@@ -2,12 +2,19 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { StepProgress } from './StepProgress'
 
-const labels = ['General', 'Hosts', 'Participants', 'Repechaje', 'Draw', 'Confirm']
+const labels = [
+  { num: 1, label: 'General' },
+  { num: 2, label: 'Hosts' },
+  { num: 3, label: 'Participants' },
+  { num: 4, label: 'Repechaje' },
+  { num: 5, label: 'Draw' },
+  { num: 6, label: 'Confirm' }
+]
 
 describe('StepProgress', () => {
   it('renders all step labels', () => {
     render(<StepProgress step={1} setStep={() => {}} stepLabels={labels} />)
-    labels.forEach(label => {
+    labels.forEach(({ label }) => {
       expect(screen.getByText(label)).toBeInTheDocument()
     })
   })

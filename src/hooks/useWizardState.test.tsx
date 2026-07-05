@@ -153,13 +153,13 @@ describe('useWizardState', () => {
     expect(result.current.isStep1Valid).toBe(true)
   })
 
-  it('isStep5Valid checks manual groups completeness', async () => {
+  it('isStep6DrawValid checks manual groups completeness', async () => {
     const { result } = renderHook(() => useWizardState())
     await vi.waitFor(() => {
       expect(result.current.availableTeams.length).toBeGreaterThan(0)
     })
     act(() => { result.current.setDrawMode('manual') })
-    expect(result.current.isStep5Valid).toBe(false)
+    expect(result.current.isStep6DrawValid).toBe(false)
   })
 
   it('getAssignedGroupName returns group name for assigned team', async () => {
