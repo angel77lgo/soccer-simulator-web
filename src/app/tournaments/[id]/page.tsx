@@ -226,8 +226,8 @@ export default function TournamentDashboard() {
               );
             })}
             {isFinished && (
-              <Button variant="outline" onClick={() => setShowChampion(true)}>
-                <Crown className="mr-1.5 h-4 w-4" /> Ver campeón
+              <Button variant="field" onClick={() => setShowChampion(true)}>
+                <Crown className="mr-1.5 h-4 w-4" /> Ver Campeón
               </Button>
             )}
           </div>
